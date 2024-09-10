@@ -34,9 +34,6 @@ public class PlayerController : MonoBehaviour
         speedX = input.x * movSpeed;
         speedY = input.y * movSpeed;
 
-        Debug.Log("This is input.x: " + speedX);
-        Debug.Log("This is input.y: " + speedY);
-
         if(speedY != 0 || speedX != 0)
         {
             animator.SetFloat("moveX", speedX);

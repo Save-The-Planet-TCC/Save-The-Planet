@@ -5,6 +5,14 @@ public class CleanTrash : MonoBehaviour
     private bool isPlayerInTrigger = false;
     public GameObject Trash;
     public PlayerData playerData;
+    public int minCash;
+    public int maxCash;
+
+    private void Start()
+    {
+        minCash = 5; 
+        maxCash = 10;
+    }
 
     // Update is called once per frame
     void Update()
@@ -12,12 +20,11 @@ public class CleanTrash : MonoBehaviour
         if (isPlayerInTrigger && Input.GetKeyDown(KeyCode.E))
         {
             Trash.SetActive(false);
-            playerData.TrashCleanedTrigger();
-            playerData.AddScore(10);
+            playerData.TrashCleanedTrigger();   
+            playerData.AddScore(Random.Range(minCash, maxCash));
         }
     }
 
-    // When the player enters the trigger zone
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -26,7 +33,6 @@ public class CleanTrash : MonoBehaviour
         }
     }
 
-    // When the player exits the trigger zone
     private void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Player"))

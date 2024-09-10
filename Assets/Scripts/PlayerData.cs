@@ -7,6 +7,7 @@ public class PlayerData : MonoBehaviour
     int score;
     public GameObject coinsText;
     private Text coinsTextComponent;
+    public SpawnTrash spawnTrash;
     public int TrashCleaned;
     public int sceneBuildIndex;
     void Start()
@@ -14,6 +15,7 @@ public class PlayerData : MonoBehaviour
         coinsTextComponent = coinsText.GetComponent<Text>();
         LoadPrefs();
         coinsTextComponent.text = score.ToString();
+        TrashCleaned = 0;
     }
 
     private void SavePrefs()
@@ -26,15 +28,6 @@ public class PlayerData : MonoBehaviour
         score = PlayerPrefs.GetInt("Coins");
     }
 
-    void Update()
-    {
-        if (TrashCleaned == 4)
-        {
-            TrashCleaned = 0;
-            SceneManager.LoadScene(sceneBuildIndex, LoadSceneMode.Single);
-        }
-    }
-
     public void AddScore(int scoreAmount)
     {
         score += scoreAmount;
@@ -45,5 +38,24 @@ public class PlayerData : MonoBehaviour
     public void TrashCleanedTrigger()
     {
         TrashCleaned += 1;
+        if (TrashCleaned == spawnTrash.trashCount)
+        {
+            TrashCleaned = 0;
+            SceneManager.LoadScene(sceneBuildIndex, LoadSceneMode.Single);
+        }
     }
+
+    public void ResetData()
+    {
+        score = 0;
+        SavePrefs();
+    }
+
+    //private void Update()
+    //{
+    //    if (Input.GetKeyDown(KeyCode.Space))
+    //    {
+    //        ResetData();
+    //    }
+    //}
 }
