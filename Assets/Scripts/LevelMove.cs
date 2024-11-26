@@ -13,7 +13,6 @@ public class LevelMove : MonoBehaviour
         interactionPopup.SetActive(false);
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (isPlayerInTrigger && Input.GetKeyDown(KeyCode.E))
@@ -22,7 +21,6 @@ public class LevelMove : MonoBehaviour
         }
     }
 
-    // When the player enters the trigger zone
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player"))
@@ -32,7 +30,6 @@ public class LevelMove : MonoBehaviour
         }
     }
 
-    // When the player exits the trigger zone
     private void OnTriggerExit2D(Collider2D other)
     {
         if (other.CompareTag("Player"))

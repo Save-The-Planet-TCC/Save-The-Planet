@@ -4,58 +4,117 @@ using UnityEngine.UI;
 
 public class PlayerData : MonoBehaviour
 {
-    int score;
-    public GameObject coinsText;
+    private int tempScore;
+    private int score;
+    private bool debounce;
+    private int timesTempMoneyWasGiven = 0;
+    private int timesMoneyWasGiven = 0;
     private Text coinsTextComponent;
     public SpawnTrash spawnTrash;
-    public int TrashCleaned;
+    public GameObject coinsText;
+    public TimerScript timerScript;
+    public int speedUpgradeLevel;
+    public int trashGatheringUpgradeLevel;
+    public string Username;
+    public int TrashCleaned = 0;
     public int sceneBuildIndex;
+
     void Start()
     {
-        coinsTextComponent = coinsText.GetComponent<Text>();
+        Username = GameData.Instance.Username;
         LoadPrefs();
-        coinsTextComponent.text = score.ToString();
+        coinsTextComponent = coinsText.GetComponent<Text>();
         TrashCleaned = 0;
+        tempScore = 0;
+        debounce = false;
+        timesTempMoneyWasGiven = 0;
+        timesMoneyWasGiven = 0;
+        UpdateCoinsText();
     }
 
-    private void SavePrefs()
+    public void SavePrefs()
     {
-        PlayerPrefs.SetInt("Coins", score);
+        PlayerPrefs.SetInt($"{Username}_Coins", score);
+        PlayerPrefs.SetInt($"{Username}_SpeedUpgradeLevel", speedUpgradeLevel);
+        PlayerPrefs.SetInt($"{Username}_TrashGatheringUpgradeLevel", trashGatheringUpgradeLevel);
     }
 
-    private void LoadPrefs()
+    public void LoadPrefs()
     {
-        score = PlayerPrefs.GetInt("Coins");
+        score = PlayerPrefs.GetInt($"{Username}_Coins", 0);
+        speedUpgradeLevel = PlayerPrefs.GetInt($"{Username}_SpeedUpgradeLevel", 0);
+        trashGatheringUpgradeLevel = PlayerPrefs.GetInt($"{Username}_TrashGatheringUpgradeLevel", 0);
     }
 
-    public void AddScore(int scoreAmount)
+    public void AddScore(int tempScore)
     {
-        score += scoreAmount;
-        coinsTextComponent.text = score.ToString();
+        timesMoneyWasGiven += 1;
+        if (timesMoneyWasGiven == 1)
+        {
+            score += tempScore;
+        }
         SavePrefs();
+    }
+    
+    public void AddStageScore(int scoreAmount)
+    {
+        timesTempMoneyWasGiven += 1;
+        if(timesTempMoneyWasGiven <= spawnTrash.trashCount)
+        {
+            tempScore += scoreAmount;
+        }
+        UpdateCoinsText();
+    }
+
+    public void UpdateCoinsText()
+    {
+        if(TrashCleaned == 0 || TrashCleaned < spawnTrash.trashCount)
+        {
+            coinsTextComponent.text = (score + tempScore).ToString();
+        }
     }
 
     public void TrashCleanedTrigger()
     {
         TrashCleaned += 1;
-        if (TrashCleaned == spawnTrash.trashCount)
+        if (TrashCleaned == spawnTrash.trashCount && !debounce)
         {
+            debounce = true;
+            AddScore(tempScore);
             TrashCleaned = 0;
+            timerScript.gameFinished = true;
             SceneManager.LoadScene(sceneBuildIndex, LoadSceneMode.Single);
         }
     }
 
+    public bool BuySpeedUpgrade(int price)
+    {
+        if (score >= price)
+        {
+            score -= price;
+            UpdateCoinsText();
+            speedUpgradeLevel++;
+            SavePrefs();
+            return true;
+        }
+        return false;
+    }
+
+    public bool BuyTrashGatheringUpgrade(int price)
+    {
+        if(score >= price)
+        {
+            score -= price;
+            UpdateCoinsText();
+            trashGatheringUpgradeLevel++;
+            SavePrefs();
+            return true;
+        }
+        return false;
+    }
     public void ResetData()
     {
         score = 0;
         SavePrefs();
     }
-
-    //private void Update()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.Space))
-    //    {
-    //        ResetData();
-    //    }
-    //}
 }

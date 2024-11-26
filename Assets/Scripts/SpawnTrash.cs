@@ -7,11 +7,11 @@ public class SpawnTrash : MonoBehaviour
     public PlayerData playerData;
     public int minTrash = 1;
     public int maxTrash = 10;
-    public int trashCount;
+    public float trashCount;
     private float randomX;
     private float randomY;
 
-    void Start()
+    void Awake()
     {
         trashCount = Random.Range(minTrash, maxTrash);
 

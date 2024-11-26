@@ -1,22 +1,16 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using System.Runtime.CompilerServices;
+
 public class TimerScript : MonoBehaviour
 {
     public GameObject timerText;
     public SpawnTrash spawnTrash;
-
+    public bool gameFinished;
     private Text timerTextComponent;
     private float timeRemaining;
     private float timeSinceLastUpdate = 0f;
     public int sceneBuildIndex;
-    // Start is called before the first frame update
-
-    private void Awake()
-    {
-
-    }
 
     private void Start()
     {
@@ -29,7 +23,7 @@ public class TimerScript : MonoBehaviour
     private void Update()
     {
         timeSinceLastUpdate += Time.deltaTime;
-        if (timeSinceLastUpdate >= 1f)
+        if (timeSinceLastUpdate >= 1f && gameFinished == false)
         {
             timeRemaining -= 1f;
             timeSinceLastUpdate = 0f;

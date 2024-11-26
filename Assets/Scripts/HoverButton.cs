@@ -4,7 +4,9 @@ using UnityEngine.UI;
 
 public class HoverButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    public Color hoverColor = Color.red;
+    public Color hoverColor;
+    public Color unableColor;
+    public Text userInput;
     private Color originalColor;
     private Text textComponent;
 
@@ -16,7 +18,14 @@ public class HoverButton : MonoBehaviour, IPointerEnterHandler, IPointerExitHand
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        textComponent.color = hoverColor;
+        if (!string.IsNullOrEmpty(userInput.text))
+        {
+            textComponent.color = hoverColor;
+        }
+        else
+        {
+            textComponent.color = unableColor;
+        }
     }
 
     public void OnPointerExit(PointerEventData eventData)

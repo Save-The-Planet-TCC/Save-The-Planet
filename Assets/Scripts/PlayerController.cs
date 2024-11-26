@@ -1,10 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    public float defaultSpeed = 4;
     public float movSpeed;
+    public PlayerData playerData;
     private float speedX, speedY;
     private Rigidbody2D rb;
     private Animator animator;
@@ -23,6 +23,7 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        UpdateMovementSpeed();
         input.x = Input.GetAxisRaw("Horizontal");
         input.y = Input.GetAxisRaw("Vertical");
 
@@ -49,5 +50,9 @@ public class PlayerController : MonoBehaviour
 
 
         rb.velocity = new Vector2(speedX, speedY);
+    }
+    public void UpdateMovementSpeed()
+    {
+        movSpeed = playerData.speedUpgradeLevel + defaultSpeed;
     }
 }
